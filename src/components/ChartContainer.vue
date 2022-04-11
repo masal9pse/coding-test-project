@@ -14,6 +14,9 @@ RESASの人口構成データ＊を可視化してみた
         {{ value.text }}
       </option>
     </select>
+     <input type="checkbox" id="scales" name="scales"
+         checked>
+     <label for="scales">Scales</label>
     <line-chart :chart-data="datacollection" :option="options"></line-chart>
     <!-- <line-chart :option="options"></line-chart> -->
   </div>
