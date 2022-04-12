@@ -63,7 +63,7 @@ export default {
         { value: 23, text: "愛知県" },
         { value: 24, text: "三重県" },
         { value: 25, text: "滋賀県" },
-        { value: 26, text: "京都>府" },
+        { value: 26, text: "京都府" },
         { value: 27, text: "大阪府" },
         { value: 28, text: "兵庫県" },
         { value: 29, text: "奈良県" },
@@ -93,8 +93,18 @@ export default {
     this.fillData();
   },
   methods: {
-    onChange(value) {
-      console.log('出力値です'+value)
+    onChange() {
+      // console.log('出力値です'+value)
+      this.datacollection.datasets.push(
+        {
+                label: 'テスト用', //総人口
+                borderColor: "blue",
+                fill: false,
+                data: [100000,100000,100000,100000,100000,100000,100000,100000,100000,100000],
+        }
+      )
+      console.log('aiueo')
+      console.log(this.datacollection)
     },
     fillData() {
       this.url =
