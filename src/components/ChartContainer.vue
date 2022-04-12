@@ -15,9 +15,11 @@ RESASの人口構成データ＊を可視化してみた
       </option>
     </select>
     <label v-for="(value, index) in pref_list" :key="index">
-      <input type="checkbox">
+      <!-- <input type="checkbox" v-model="selected_pref_list" :value="index"> -->
+      <input type="checkbox" v-model="selected_pref_list" :value="value.text">
       <span v-text="value.text"></span>
     </label>
+    <p>プロパティの値 {{ selected_pref_list }}</p>
     <line-chart :chart-data="datacollection" :option="options"></line-chart>
     <!-- <line-chart :option="options"></line-chart> -->
   </div>
@@ -86,6 +88,7 @@ export default {
         { value: 46, text: "鹿児島県" },
         { value: 47, text: "沖縄県" },
       ],
+      selected_pref_list: [],
     };
   },
   mounted() {
