@@ -154,11 +154,10 @@ export default {
             data: response.data.result.data[0].data.map((x) => x.value),
           });
           console.log(obj.datasets);
-          Vue.set(this.datacollection, 3, obj);
-          this.datacollection = obj
+          // Vue.set(this.datacollection, 3, obj);
+          Vue.set(this.datacollection, this.selected, obj);
+          console.log(this.datacollection);
         });
-      // Vue.set(this.datacollection,0,obj)
-      // Vue.set(this.datacollection, 1, obj);
     },
     fillData() {
       this.url =
@@ -170,6 +169,7 @@ export default {
           data: {},
         })
         .then((response) => {
+          console.log(response)
           this.datacollection = {
             labels: response.data.result.data[0].data.map((x) => x.year),
             datasets: [
