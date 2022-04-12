@@ -14,9 +14,10 @@ RESASの人口構成データ＊を可視化してみた
         {{ value.text }}
       </option>
     </select>
-     <input type="checkbox" id="scales" name="scales"
-         checked>
-     <label for="scales">Scales</label>
+    <label v-for="(value, index) in pref_list" :key="index">
+      <input type="checkbox">
+      <span v-text="value.text"></span>
+    </label>
     <line-chart :chart-data="datacollection" :option="options"></line-chart>
     <!-- <line-chart :option="options"></line-chart> -->
   </div>
@@ -32,7 +33,8 @@ export default {
   },
   data() {
     return {
-      datacollection: Object,
+      // datacollection: Object,
+      datacollection: null,
       options: {},
       selected: 13,
       pref_list: [
@@ -76,7 +78,7 @@ export default {
         { value: 38, text: "愛媛県" },
         { value: 39, text: "高知県" },
         { value: 40, text: "福岡県" },
-        { value: 41, text: "佐>賀県" },
+        { value: 41, text: "佐賀県" },
         { value: 42, text: "長崎県" },
         { value: 43, text: "熊本県" },
         { value: 44, text: "大分県" },
