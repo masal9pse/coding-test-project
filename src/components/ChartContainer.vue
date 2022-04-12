@@ -15,8 +15,7 @@ RESASの人口構成データ＊を可視化してみた
       </option>
     </select>
     <label v-for="(value, index) in pref_list" :key="index">
-      <!-- <input type="checkbox" v-model="selected_pref_list" :value="index"> -->
-      <input type="checkbox" v-model="selected_pref_list" :value="value.text">
+      <input type="checkbox" v-model="selected_pref_list" v-on:change="onChange(value.text)" :value="value.text">
       <span v-text="value.text"></span>
     </label>
     <p>プロパティの値 {{ selected_pref_list }}</p>
@@ -35,8 +34,7 @@ export default {
   },
   data() {
     return {
-      // datacollection: Object,
-      datacollection: null,
+      datacollection: {},
       options: {},
       selected: 13,
       pref_list: [
@@ -95,6 +93,9 @@ export default {
     this.fillData();
   },
   methods: {
+    onChange(value) {
+      console.log('出力値です'+value)
+    },
     fillData() {
       this.url =
         "https://opendata.resas-portal.go.jp/api/v1/population/composition/perYear?cityCode=-&prefCode=" +
@@ -109,30 +110,37 @@ export default {
           this.datacollection = {
             labels: response.data.result.data[0].data.map((x) => x.year),
             datasets: [
+              // checkboxにチェックを入れるたびにここに追加する。
               {
                 label: response.data.result.data[0].label, //総人口
                 borderColor: "#ff7369",
                 fill: false,
                 data: response.data.result.data[0].data.map((x) => x.value),
               },
-              {
-                label: response.data.result.data[1].label, //年少人口
-                borderColor: "#6ca7ff",
-                fill: false,
-                data: response.data.result.data[1].data.map((x) => x.value),
-              },
-              {
-                label: response.data.result.data[2].label, //生産年齢人口
-                borderColor: "#77d9a8",
-                fill: false,
-                data: response.data.result.data[2].data.map((x) => x.value),
-              },
-              {
-                label: response.data.result.data[3].label, //老年人口
-                borderColor: "#d8f255",
-                fill: false,
-                data: response.data.result.data[3].data.map((x) => x.value),
-              },
+              // {
+              //   label: response.data.result.data[0].label, //総人口
+              //   borderColor: "red",
+              //   fill: false,
+              //   data: response.data.result.data[0].data.map((x) => x.value),
+              // },
+              // {
+              //   label: response.data.result.data[1].label, //年少人口
+              //   borderColor: "#6ca7ff",
+              //   fill: false,
+              //   data: response.data.result.data[1].data.map((x) => x.value),
+              // },
+              // {
+              //   label: response.data.result.data[2].label, //生産年齢人口
+              //   borderColor: "#77d9a8",
+              //   fill: false,
+              //   data: response.data.result.data[2].data.map((x) => x.value),
+              // },
+              // {
+              //   label: response.data.result.data[3].label, //老年人口
+              //   borderColor: "#d8f255",
+              //   fill: false,
+              //   data: response.data.result.data[3].data.map((x) => x.value),
+              // },
             ],
           };
           console.log(123)
