@@ -32,7 +32,7 @@ RESASの人口構成データ＊を可視化してみた
 <script>
 import axios from "axios";
 import LineChart from "./LineChart.js";
-import Vue from 'vue';
+import Vue from "vue";
 
 export default {
   components: {
@@ -132,20 +132,33 @@ export default {
       console.log(this.datacollection);
     },
     updateData() {
-      let obj = {}
-      obj = this.datacollection
-      obj.datasets.push(
-        {
-        label: "埼玉", //総人口
-        borderColor: "blue",
-        fill: false,
-        data: [
-          100000, 100000, 100000, 100000, 100000, 100000, 100000, 100000,
-          100000, 100000,
-        ],
-      }
-      )
-      Vue.set(this.datacollection,1,obj)
+      let obj = {};
+      // obj = this.datacollection
+
+      this.url =
+        "https://opendata.resas-portal.go.jp/api/v1/population/composition/perYear?cityCode=-&prefCode=" +
+        this.selected;
+
+      axios
+        .get(this.url, {
+          headers: { "X-API-KEY": "xLmOUH2rMuDJJqMWVsqi5bCSB11f0AlsklOLp6JF" },
+          data: {},
+        })
+        .then((response) => {
+          obj = this.datacollection
+          obj.datasets.push({
+            // checkboxにチェックを入れるたびにここに追加する。
+            label: response.data.result.data[0].label,
+            borderColor: "green",
+            fill: false,
+            data: response.data.result.data[0].data.map((x) => x.value),
+          });
+          console.log(obj.datasets);
+          Vue.set(this.datacollection, 3, obj);
+          this.datacollection = obj
+        });
+      // Vue.set(this.datacollection,0,obj)
+      // Vue.set(this.datacollection, 1, obj);
     },
     fillData() {
       this.url =
@@ -156,7 +169,7 @@ export default {
           headers: { "X-API-KEY": "xLmOUH2rMuDJJqMWVsqi5bCSB11f0AlsklOLp6JF" },
           data: {},
         })
-        .then((response) => {          
+        .then((response) => {
           this.datacollection = {
             labels: response.data.result.data[0].data.map((x) => x.year),
             datasets: [
