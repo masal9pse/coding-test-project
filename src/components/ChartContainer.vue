@@ -5,7 +5,8 @@
 RESASの人口構成データ＊を可視化してみた
          ＊https://opendata.resas-portal.go.jp/docs/api/v1/population/composition/perYear.html
     </pre>
-    <select v-model="selected" v-on:change="fillData()">
+    <!-- <select v-model="selected" v-on:change="fillData()"> -->
+    <select v-model="selected" v-on:change="updateData()">
       <option
         v-for="(value, index) in pref_list"
         v-bind:value="value.value"
@@ -15,7 +16,11 @@ RESASの人口構成データ＊を可視化してみた
       </option>
     </select>
     <label v-for="(value, index) in pref_list" :key="index">
-      <input type="checkbox" v-model="selected_pref_list" v-on:change="onChange(value.text)" :value="value.text">
+      <input
+        type="checkbox"
+        v-on:change="onChange(value.text)"
+        :value="value.text"
+      />
       <span v-text="value.text"></span>
     </label>
     <p>プロパティの値 {{ selected_pref_list }}</p>
@@ -27,6 +32,7 @@ RESASの人口構成データ＊を可視化してみた
 <script>
 import axios from "axios";
 import LineChart from "./LineChart.js";
+import Vue from 'vue';
 
 export default {
   components: {
@@ -34,7 +40,23 @@ export default {
   },
   data() {
     return {
-      datacollection: {},
+      datacollection: {
+        // labels: [
+        //   1960,
+        //   1965,
+        //   1970,
+        //   1975,
+        //   1980,
+        //   1985,
+        //   1990,
+        //   1995,
+        //   2000,
+        //   2005,
+        //   2010,
+        //   2015,
+        //   2020,
+        // ]
+      },
       options: {},
       selected: 13,
       pref_list: [
@@ -90,21 +112,40 @@ export default {
     };
   },
   mounted() {
-    this.fillData();
+    this.fillData(); // コメントアウトすると初期ページが表示されなくなる。
+    // this.onChange();
   },
   methods: {
     onChange() {
       // console.log('出力値です'+value)
-      this.datacollection.datasets.push(
+      // this.$set(this.datacollection)
+      this.datacollection.datasets.push({
+        label: "東京", //総人口
+        borderColor: "blue",
+        fill: false,
+        data: [
+          100000, 100000, 100000, 100000, 100000, 100000, 100000, 100000,
+          100000, 100000,
+        ],
+      });
+      console.log("aiueo");
+      console.log(this.datacollection);
+    },
+    updateData() {
+      let obj = {}
+      obj = this.datacollection
+      obj.datasets.push(
         {
-                label: 'テスト用', //総人口
-                borderColor: "blue",
-                fill: false,
-                data: [100000,100000,100000,100000,100000,100000,100000,100000,100000,100000],
-        }
+        label: "埼玉", //総人口
+        borderColor: "blue",
+        fill: false,
+        data: [
+          100000, 100000, 100000, 100000, 100000, 100000, 100000, 100000,
+          100000, 100000,
+        ],
+      }
       )
-      console.log('aiueo')
-      console.log(this.datacollection)
+      Vue.set(this.datacollection,1,obj)
     },
     fillData() {
       this.url =
@@ -115,8 +156,7 @@ export default {
           headers: { "X-API-KEY": "xLmOUH2rMuDJJqMWVsqi5bCSB11f0AlsklOLp6JF" },
           data: {},
         })
-        .then((response) => {
-            console.log(response)
+        .then((response) => {          
           this.datacollection = {
             labels: response.data.result.data[0].data.map((x) => x.year),
             datasets: [
@@ -127,33 +167,9 @@ export default {
                 fill: false,
                 data: response.data.result.data[0].data.map((x) => x.value),
               },
-              // {
-              //   label: response.data.result.data[0].label, //総人口
-              //   borderColor: "red",
-              //   fill: false,
-              //   data: response.data.result.data[0].data.map((x) => x.value),
-              // },
-              // {
-              //   label: response.data.result.data[1].label, //年少人口
-              //   borderColor: "#6ca7ff",
-              //   fill: false,
-              //   data: response.data.result.data[1].data.map((x) => x.value),
-              // },
-              // {
-              //   label: response.data.result.data[2].label, //生産年齢人口
-              //   borderColor: "#77d9a8",
-              //   fill: false,
-              //   data: response.data.result.data[2].data.map((x) => x.value),
-              // },
-              // {
-              //   label: response.data.result.data[3].label, //老年人口
-              //   borderColor: "#d8f255",
-              //   fill: false,
-              //   data: response.data.result.data[3].data.map((x) => x.value),
-              // },
             ],
           };
-          console.log(123)
+          console.log(123);
         });
     },
   },
@@ -161,8 +177,8 @@ export default {
 </script>
 
 <style>
-  .small {
-    max-width: 600px;
-    margin:  10px auto;
-  }
+.small {
+  max-width: 600px;
+  margin: 10px auto;
+}
 </style>
