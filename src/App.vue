@@ -1,19 +1,18 @@
 <template>
   <div id="app">
-   <!--    <img alt="Vue logo" src="./assets/logo.png"> -->
-    <ChartContainer msg="Welcome to Your Vue.js App"/>
+    <ChartContainer msg="Welcome to Your Vue.js App" />
   </div>
 </template>
 
 <script>
-import ChartContainer  from './components/ChartContainer.vue'
+import ChartContainer from "./components/ChartContainer.vue";
 
 export default {
-  name: 'App',
+  name: "App",
   components: {
-    ChartContainer
-  }
-}
+    ChartContainer,
+  },
+};
 </script>
 
 <style>
