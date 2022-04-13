@@ -86,13 +86,14 @@ export default {
     onChange(pref, event) {
       if (event.target.checked) {
         this.url =
-          "https://opendata.resas-portal.go.jp/api/v1/population/composition/perYear?cityCode=-&prefCode=" +
+          process.env.VUE_APP_RESAS_BASE_URL +
+          "/api/v1/population/composition/perYear?cityCode=-&prefCode=" +
           pref.number;
 
         axios
           .get(this.url, {
             headers: {
-              "X-API-KEY": "xLmOUH2rMuDJJqMWVsqi5bCSB11f0AlsklOLp6JF",
+              "X-API-KEY": process.env.VUE_APP_RESAS_API_KEY,
             },
             data: {},
           })
