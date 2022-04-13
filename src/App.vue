@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <ChartContainer msg="Welcome to Your Vue.js App" />
+    <chart-container />
   </div>
 </template>
 
