@@ -5,27 +5,16 @@
 RESASの人口構成データ＊を可視化してみた
          ＊https://opendata.resas-portal.go.jp/docs/api/v1/population/composition/perYear.html
     </pre>
-    <!-- <select v-model="selected" v-on:change="fillData()"> -->
-    <select v-model="selected" v-on:change="updateData()">
-      <option
-        v-for="(value, index) in pref_list"
-        v-bind:value="value.value"
-        :key="index"
-      >
-        {{ value.text }}
-      </option>
-    </select>
     <label v-for="(value, index) in pref_list" :key="index">
       <input
         type="checkbox"
-        v-on:change="onChange(value.text)"
+        v-on:change="onChange(value)"
         :value="value.text"
       />
       <span v-text="value.text"></span>
     </label>
     <p>プロパティの値 {{ selected_pref_list }}</p>
     <line-chart :chart-data="datacollection" :option="options"></line-chart>
-    <!-- <line-chart :option="options"></line-chart> -->
   </div>
 </template>
 
@@ -40,23 +29,7 @@ export default {
   },
   data() {
     return {
-      datacollection: {
-        // labels: [
-        //   1960,
-        //   1965,
-        //   1970,
-        //   1975,
-        //   1980,
-        //   1985,
-        //   1990,
-        //   1995,
-        //   2000,
-        //   2005,
-        //   2010,
-        //   2015,
-        //   2020,
-        // ]
-      },
+      datacollection: {},
       options: {},
       selected: 13,
       pref_list: [
@@ -116,20 +89,29 @@ export default {
     // this.onChange();
   },
   methods: {
-    onChange() {
-      // console.log('出力値です'+value)
-      // this.$set(this.datacollection)
-      this.datacollection.datasets.push({
-        label: "東京", //総人口
-        borderColor: "blue",
-        fill: false,
-        data: [
-          100000, 100000, 100000, 100000, 100000, 100000, 100000, 100000,
-          100000, 100000,
-        ],
-      });
-      console.log("aiueo");
-      console.log(this.datacollection);
+    onChange(value) {
+      let obj = {};
+      this.url =
+        "https://opendata.resas-portal.go.jp/api/v1/population/composition/perYear?cityCode=-&prefCode=" +
+        value.value;
+
+      axios
+        .get(this.url, {
+          headers: { "X-API-KEY": "xLmOUH2rMuDJJqMWVsqi5bCSB11f0AlsklOLp6JF" },
+          data: {},
+        })
+        .then((response) => {
+          obj = this.datacollection;
+          obj.datasets.push({
+            label: value.text,
+            borderColor: "green",
+            fill: false,
+            data: response.data.result.data[0].data.map((x) => x.value),
+          });
+          Vue.set(this.datacollection, value.value, obj);
+          console.log(obj.datasets);
+          console.log(this.datacollection);
+        });
     },
     updateData() {
       let obj = {};
@@ -145,11 +127,11 @@ export default {
           data: {},
         })
         .then((response) => {
-          obj = this.datacollection
+          obj = this.datacollection;
           obj.datasets.push({
             // checkboxにチェックを入れるたびにここに追加する。
             // label: response.data.result.data[0].label,
-            label: this.pref_list[this.selected-1].text,
+            label: this.pref_list[this.selected - 1].text,
             borderColor: "green",
             fill: false,
             data: response.data.result.data[0].data.map((x) => x.value),
@@ -170,7 +152,7 @@ export default {
           data: {},
         })
         .then((response) => {
-          console.log(response)
+          console.log(response);
           this.datacollection = {
             labels: response.data.result.data[0].data.map((x) => x.year),
             datasets: [
