@@ -102,33 +102,40 @@ export default {
             data: {},
           })
           .then((response) => {
-            let reactiveObject = {};
-            reactiveObject.datasets = [];
-            reactiveObject = this.datacollection;
-            reactiveObject.datasets.push({
-              label: pref.name,
-              borderColor: this.getRandomColor(),
-              fill: false,
-              data: response.data.result.data[0].data.map((x) => x.value),
-            });
+            let reactiveObject = this.getReactiveObjectForInsert(
+              response,
+              pref
+            );
             Vue.set(this.datacollection, pref.number, reactiveObject);
-            console.log("値を追加しました。");
-            console.log(reactiveObject.datasets);
           });
       } else {
-        let reactiveObject = {};
-        reactiveObject.datasets = [];
-        reactiveObject = this.datacollection;
-        var checkedIndex = this.getDeletedCheckedIndex(
-          reactiveObject.datasets,
-          event
-        );
-
-        reactiveObject.datasets.splice(checkedIndex, 1);
+        let reactiveObject = this.getReactiveObjectForDelete(event);
         Vue.delete(this.datacollection, pref.number, reactiveObject);
-        console.log("値を削除しました。");
-        console.log(reactiveObject.datasets);
       }
+    },
+    getReactiveObjectForInsert(response, pref) {
+      let reactiveObject = {};
+      reactiveObject.datasets = [];
+      reactiveObject = this.datacollection;
+      reactiveObject.datasets.push({
+        label: pref.name,
+        borderColor: this.getRandomColor(),
+        fill: false,
+        data: response.data.result.data[0].data.map((x) => x.value),
+      });
+      console.log(reactiveObject.datasets);
+      return reactiveObject;
+    },
+    getReactiveObjectForDelete(event) {
+      let reactiveObject = {};
+      reactiveObject.datasets = [];
+      reactiveObject = this.datacollection;
+      var checkedIndex = this.getDeletedCheckedIndex(
+        reactiveObject.datasets,
+        event
+      );
+      console.log(reactiveObject.datasets);
+      reactiveObject.datasets.splice(checkedIndex, 1);
     },
     getRandomColor() {
       var letters = "0123456789ABCDEF";
