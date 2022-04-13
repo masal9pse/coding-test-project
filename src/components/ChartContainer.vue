@@ -24,7 +24,12 @@ export default {
   },
   data() {
     return {
-      datacollection: {},
+      datacollection: {
+        labels: [
+          1960, 1965, 1970, 1975, 1980, 1985, 1990, 2000, 2005, 2010, 2015,
+          2020, 2025, 2030, 2035, 2040, 2045,
+        ],
+      },
       options: {},
       selected: 13,
       pref_list: [
@@ -79,18 +84,9 @@ export default {
       selected_pref_list: [],
     };
   },
-  mounted() {
-    this.fillData(); // コメントアウトすると初期ページが表示されなくなる。
-    // this.onChange();
-  },
   methods: {
     onChange(value, event) {
-      let obj = {};
       if (event.target.checked) {
-        console.log("aaaaa");
-        console.log(event.target.checked);
-        console.log(event.target.value);
-
         this.url =
           "https://opendata.resas-portal.go.jp/api/v1/population/composition/perYear?cityCode=-&prefCode=" +
           value.value;
@@ -103,6 +99,8 @@ export default {
             data: {},
           })
           .then((response) => {
+            let obj = {};
+            obj.datasets = [];
             obj = this.datacollection;
             obj.datasets.push({
               label: value.text,
@@ -111,22 +109,19 @@ export default {
               data: response.data.result.data[0].data.map((x) => x.value),
             });
             Vue.set(this.datacollection, value.value, obj);
-            console.log('値を追加しました。')
+            console.log("値を追加しました。");
             console.log(obj.datasets);
-            console.log(this.datacollection);
           });
       } else {
-        console.log("bbbbbb");
-        console.log(event.target.checked);
-        console.log(value);
         let obj = {};
-        obj = this.datacollection;        
-        // console.log(typeof(obj.datasets))
-        obj.datasets.splice(1,1)
+        obj.datasets = [];
+        obj = this.datacollection;
+        var checkedIndex = this.getDeletedCheckedIndex(obj.datasets, event);
+
+        obj.datasets.splice(checkedIndex, 1);
         Vue.delete(this.datacollection, value.value, obj);
-        console.log('値を削除しました。')
+        console.log("値を削除しました。");
         console.log(obj.datasets);
-        console.log(this.datacollection);
       }
     },
     getRandomColor() {
@@ -137,61 +132,15 @@ export default {
       }
       return color;
     },
-    updateData() {
-      let obj = {};
-      // obj = this.datacollection
 
-      this.url =
-        "https://opendata.resas-portal.go.jp/api/v1/population/composition/perYear?cityCode=-&prefCode=" +
-        this.selected;
-
-      axios
-        .get(this.url, {
-          headers: { "X-API-KEY": "xLmOUH2rMuDJJqMWVsqi5bCSB11f0AlsklOLp6JF" },
-          data: {},
-        })
-        .then((response) => {
-          obj = this.datacollection;
-          obj.datasets.push({
-            // checkboxにチェックを入れるたびにここに追加する。
-            // label: response.data.result.data[0].label,
-            label: this.pref_list[this.selected - 1].text,
-            borderColor: "green",
-            fill: false,
-            data: response.data.result.data[0].data.map((x) => x.value),
-          });
-          console.log(obj.datasets);
-          // Vue.set(this.datacollection, 3, obj);
-          Vue.set(this.datacollection, this.selected, obj);
-          console.log(this.datacollection);
-        });
-    },
-    fillData() {
-      this.url =
-        "https://opendata.resas-portal.go.jp/api/v1/population/composition/perYear?cityCode=-&prefCode=" +
-        this.selected;
-      axios
-        .get(this.url, {
-          headers: { "X-API-KEY": "xLmOUH2rMuDJJqMWVsqi5bCSB11f0AlsklOLp6JF" },
-          data: {},
-        })
-        .then((response) => {
-          console.log(response);
-          this.datacollection = {
-            labels: response.data.result.data[0].data.map((x) => x.year),
-            datasets: [
-              // checkboxにチェックを入れるたびにここに追加する。
-              {
-                label: this.pref_list[this.selected - 1].text, //総人口
-                borderColor: "#ff7369",
-                fill: false,
-                data: response.data.result.data[0].data.map((x) => x.value),
-              },
-            ],
-          };
-          console.log(this.datacollection);
-          console.log(123);
-        });
+    getDeletedCheckedIndex(datasets, event) {
+      var checkedIndex = null;
+      datasets.forEach((dataset, index) => {
+        if (dataset.label == event.target.value) {
+          checkedIndex = index;
+        }
+      });
+      return checkedIndex;
     },
   },
 };
