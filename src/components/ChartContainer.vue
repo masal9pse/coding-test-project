@@ -1,10 +1,6 @@
 <template>
   <div class="small">
     <h2>県別人口構成グラフ</h2>
-    <pre>
-RESASの人口構成データ＊を可視化してみた
-         ＊https://opendata.resas-portal.go.jp/docs/api/v1/population/composition/perYear.html
-    </pre>
     <label v-for="(value, index) in pref_list" :key="index">
       <input
         type="checkbox"
@@ -104,7 +100,7 @@ export default {
           obj = this.datacollection;
           obj.datasets.push({
             label: value.text,
-            borderColor: "green",
+            borderColor: this.getRandomColor(),
             fill: false,
             data: response.data.result.data[0].data.map((x) => x.value),
           });
@@ -112,6 +108,14 @@ export default {
           console.log(obj.datasets);
           console.log(this.datacollection);
         });
+    },
+    getRandomColor() {
+      var letters = "0123456789ABCDEF";
+      var color = "#";
+      for (var i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+      }
+      return color;
     },
     updateData() {
       let obj = {};
