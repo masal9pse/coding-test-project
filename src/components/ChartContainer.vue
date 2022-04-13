@@ -5,9 +5,9 @@
       <input
         type="checkbox"
         v-on:change="onChange(pref, $event)"
-        :value="pref.text"
+        :value="pref.name"
       />
-      <span v-text="pref.text"></span>
+      <span v-text="pref.name"></span>
     </label>
     <line-chart :chart-data="datacollection" :option="options"></line-chart>
   </div>
@@ -31,65 +31,63 @@ export default {
         ],
       },
       options: {},
-      selected: 13,
       pref_list: [
-        { value: 1, text: "北海道" },
-        { value: 2, text: "青森県" },
-        { value: 3, text: "岩手県" },
-        { value: 4, text: "宮城県" },
-        { value: 5, text: "秋田県" },
-        { value: 6, text: "山形県" },
-        { value: 7, text: "福島県" },
-        { value: 8, text: "茨城県" },
-        { value: 9, text: "栃木県" },
-        { value: 10, text: "群馬県" },
-        { value: 11, text: "埼玉県" },
-        { value: 12, text: "千葉県" },
-        { value: 13, text: "東京都" },
-        { value: 14, text: "神奈川県" },
-        { value: 15, text: "新潟県" },
-        { value: 16, text: "富山県" },
-        { value: 17, text: "石川県" },
-        { value: 18, text: "福井県" },
-        { value: 19, text: "山梨県" },
-        { value: 20, text: "長野県" },
-        { value: 21, text: "岐阜県" },
-        { value: 22, text: "静岡県" },
-        { value: 23, text: "愛知県" },
-        { value: 24, text: "三重県" },
-        { value: 25, text: "滋賀県" },
-        { value: 26, text: "京都府" },
-        { value: 27, text: "大阪府" },
-        { value: 28, text: "兵庫県" },
-        { value: 29, text: "奈良県" },
-        { value: 30, text: "和歌山県" },
-        { value: 31, text: "鳥取県" },
-        { value: 32, text: "島根県" },
-        { value: 33, text: "岡山県" },
-        { value: 34, text: "広島県" },
-        { value: 35, text: "山口県" },
-        { value: 36, text: "徳島県" },
-        { value: 37, text: "香川県" },
-        { value: 38, text: "愛媛県" },
-        { value: 39, text: "高知県" },
-        { value: 40, text: "福岡県" },
-        { value: 41, text: "佐賀県" },
-        { value: 42, text: "長崎県" },
-        { value: 43, text: "熊本県" },
-        { value: 44, text: "大分県" },
-        { value: 45, text: "宮崎県" },
-        { value: 46, text: "鹿児島県" },
-        { value: 47, text: "沖縄県" },
+        { number: 1, name: "北海道" },
+        { number: 2, name: "青森県" },
+        { number: 3, name: "岩手県" },
+        { number: 4, name: "宮城県" },
+        { number: 5, name: "秋田県" },
+        { number: 6, name: "山形県" },
+        { number: 7, name: "福島県" },
+        { number: 8, name: "茨城県" },
+        { number: 9, name: "栃木県" },
+        { number: 10, name: "群馬県" },
+        { number: 11, name: "埼玉県" },
+        { number: 12, name: "千葉県" },
+        { number: 13, name: "東京都" },
+        { number: 14, name: "神奈川県" },
+        { number: 15, name: "新潟県" },
+        { number: 16, name: "富山県" },
+        { number: 17, name: "石川県" },
+        { number: 18, name: "福井県" },
+        { number: 19, name: "山梨県" },
+        { number: 20, name: "長野県" },
+        { number: 21, name: "岐阜県" },
+        { number: 22, name: "静岡県" },
+        { number: 23, name: "愛知県" },
+        { number: 24, name: "三重県" },
+        { number: 25, name: "滋賀県" },
+        { number: 26, name: "京都府" },
+        { number: 27, name: "大阪府" },
+        { number: 28, name: "兵庫県" },
+        { number: 29, name: "奈良県" },
+        { number: 30, name: "和歌山県" },
+        { number: 31, name: "鳥取県" },
+        { number: 32, name: "島根県" },
+        { number: 33, name: "岡山県" },
+        { number: 34, name: "広島県" },
+        { number: 35, name: "山口県" },
+        { number: 36, name: "徳島県" },
+        { number: 37, name: "香川県" },
+        { number: 38, name: "愛媛県" },
+        { number: 39, name: "高知県" },
+        { number: 40, name: "福岡県" },
+        { number: 41, name: "佐賀県" },
+        { number: 42, name: "長崎県" },
+        { number: 43, name: "熊本県" },
+        { number: 44, name: "大分県" },
+        { number: 45, name: "宮崎県" },
+        { number: 46, name: "鹿児島県" },
+        { number: 47, name: "沖縄県" },
       ],
-      selected_pref_list: [],
     };
   },
   methods: {
-    onChange(value, event) {
+    onChange(pref, event) {
       if (event.target.checked) {
         this.url =
           "https://opendata.resas-portal.go.jp/api/v1/population/composition/perYear?cityCode=-&prefCode=" +
-          value.value;
+          pref.number;
 
         axios
           .get(this.url, {
@@ -99,29 +97,32 @@ export default {
             data: {},
           })
           .then((response) => {
-            let obj = {};
-            obj.datasets = [];
-            obj = this.datacollection;
-            obj.datasets.push({
-              label: value.text,
+            let reactiveObject = {};
+            reactiveObject.datasets = [];
+            reactiveObject = this.datacollection;
+            reactiveObject.datasets.push({
+              label: pref.name,
               borderColor: this.getRandomColor(),
               fill: false,
               data: response.data.result.data[0].data.map((x) => x.value),
             });
-            Vue.set(this.datacollection, value.value, obj);
+            Vue.set(this.datacollection, pref.number, reactiveObject);
             console.log("値を追加しました。");
-            console.log(obj.datasets);
+            console.log(reactiveObject.datasets);
           });
       } else {
-        let obj = {};
-        obj.datasets = [];
-        obj = this.datacollection;
-        var checkedIndex = this.getDeletedCheckedIndex(obj.datasets, event);
+        let reactiveObject = {};
+        reactiveObject.datasets = [];
+        reactiveObject = this.datacollection;
+        var checkedIndex = this.getDeletedCheckedIndex(
+          reactiveObject.datasets,
+          event
+        );
 
-        obj.datasets.splice(checkedIndex, 1);
-        Vue.delete(this.datacollection, value.value, obj);
+        reactiveObject.datasets.splice(checkedIndex, 1);
+        Vue.delete(this.datacollection, pref.number, reactiveObject);
         console.log("値を削除しました。");
-        console.log(obj.datasets);
+        console.log(reactiveObject.datasets);
       }
     },
     getRandomColor() {
