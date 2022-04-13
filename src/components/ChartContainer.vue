@@ -1,15 +1,19 @@
 <template>
-  <div class="small">
-    <h2>県別人口構成グラフ</h2>
-    <label v-for="(pref, index) in pref_list" :key="index">
-      <input
-        type="checkbox"
-        v-on:change="onChange(pref, $event)"
-        :value="pref.name"
-      />
-      <span v-text="pref.name"></span>
-    </label>
-    <line-chart :chart-data="datacollection" :option="options"></line-chart>
+  <div>
+    <h2 class="title">県別人口構成グラフ</h2>
+    <div class="small">
+      <div class="pref_list">
+        <label v-for="(pref, index) in pref_list" :key="index">
+          <input
+            type="checkbox"
+            v-on:change="onChange(pref, $event)"
+            :value="pref.name"
+          />
+          <span v-text="pref.name"></span>
+        </label>
+      </div>
+      <line-chart :chart-data="datacollection" :option="options"></line-chart>
+    </div>
   </div>
 </template>
 
@@ -152,5 +156,11 @@ export default {
 .small {
   max-width: 600px;
   margin: 10px auto;
+}
+.title {
+  background-color: gray;
+}
+.pref_list {
+  margin-bottom: 60px;
 }
 </style>
