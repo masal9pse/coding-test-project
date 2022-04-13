@@ -148,7 +148,8 @@ export default {
           obj = this.datacollection
           obj.datasets.push({
             // checkboxにチェックを入れるたびにここに追加する。
-            label: response.data.result.data[0].label,
+            // label: response.data.result.data[0].label,
+            label: this.pref_list[this.selected-1].text,
             borderColor: "green",
             fill: false,
             data: response.data.result.data[0].data.map((x) => x.value),
