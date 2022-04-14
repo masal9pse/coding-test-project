@@ -22,6 +22,7 @@ import axios from "axios";
 import LineChart from "./LineChart.js";
 import Vue from "vue";
 import PrefList from "../const/PrefList";
+import ChartContainerModel from "../model/ChartContainerModel";
 
 export default {
   components: {
@@ -55,59 +56,20 @@ export default {
             data: {},
           })
           .then((response) => {
-            let reactiveObject = this.getReactiveObjectForInsert(
+            let reactiveObject = ChartContainerModel.getReactiveObjectForInsert(
               response,
+              this.datacollection,
               pref
             );
             Vue.set(this.datacollection, pref.number, reactiveObject);
           });
       } else {
-        let reactiveObject = this.getReactiveObjectForDelete(event);
+        let reactiveObject = ChartContainerModel.getReactiveObjectForDelete(
+          event,
+          this.datacollection
+        );
         Vue.delete(this.datacollection, pref.number, reactiveObject);
       }
-    },
-    getReactiveObjectForInsert(response, pref) {
-      let reactiveObject = {};
-      reactiveObject.datasets = [];
-      reactiveObject = this.datacollection;
-      reactiveObject.datasets.push({
-        label: pref.name,
-        borderColor: this.getRandomColor(),
-        fill: false,
-        data: response.data.result.data[0].data.map((x) => x.value),
-      });
-      console.log(reactiveObject.datasets);
-      return reactiveObject;
-    },
-    getReactiveObjectForDelete(event) {
-      let reactiveObject = {};
-      reactiveObject.datasets = [];
-      reactiveObject = this.datacollection;
-      var checkedIndex = this.getDeletedCheckedIndex(
-        reactiveObject.datasets,
-        event
-      );
-      console.log(reactiveObject.datasets);
-      reactiveObject.datasets.splice(checkedIndex, 1);
-      return reactiveObject;
-    },
-    getRandomColor() {
-      var letters = "0123456789ABCDEF";
-      var color = "#";
-      for (var i = 0; i < 6; i++) {
-        color += letters[Math.floor(Math.random() * 16)];
-      }
-      return color;
-    },
-
-    getDeletedCheckedIndex(datasets, event) {
-      var checkedIndex = null;
-      datasets.forEach((dataset, index) => {
-        if (dataset.label == event.target.value) {
-          checkedIndex = index;
-        }
-      });
-      return checkedIndex;
     },
   },
 };
