@@ -20,9 +20,9 @@
 <script>
 import LineChart from "./LineChart";
 import Vue from "vue";
-import PrefList from "../const/PrefList";
-import ChartContainerModel from "../model/ChartContainerModel";
-import ResasApiService from "../service/ResasApiService";
+import PrefList from "../consts/PrefList";
+import ChartContainerModel from "../models/ChartContainerModel";
+import ResasApiService from "../services/ResasApiService";
 
 export default {
   components: {
