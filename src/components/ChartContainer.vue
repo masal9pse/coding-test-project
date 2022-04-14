@@ -18,11 +18,11 @@
 </template>
 
 <script>
-import axios from "axios";
-import LineChart from "./LineChart.js";
+import LineChart from "./LineChart";
 import Vue from "vue";
 import PrefList from "../const/PrefList";
 import ChartContainerModel from "../model/ChartContainerModel";
+import ResasApiService from "../service/ResasApiService";
 
 export default {
   components: {
@@ -43,26 +43,14 @@ export default {
   methods: {
     onChange(pref, event) {
       if (event.target.checked) {
-        this.url =
-          process.env.VUE_APP_RESAS_BASE_URL +
-          "/api/v1/population/composition/perYear?cityCode=-&prefCode=" +
-          pref.number;
-
-        axios
-          .get(this.url, {
-            headers: {
-              "X-API-KEY": process.env.VUE_APP_RESAS_API_KEY,
-            },
-            data: {},
-          })
-          .then((response) => {
-            let reactiveObject = ChartContainerModel.getReactiveObjectForInsert(
-              response,
-              this.datacollection,
-              pref
-            );
-            Vue.set(this.datacollection, pref.number, reactiveObject);
-          });
+        ResasApiService.getFutureResponse(pref.number).then((response) => {
+          let reactiveObject = ChartContainerModel.getReactiveObjectForInsert(
+            response,
+            this.datacollection,
+            pref
+          );
+          Vue.set(this.datacollection, pref.number, reactiveObject);
+        });
       } else {
         let reactiveObject = ChartContainerModel.getReactiveObjectForDelete(
           event,
