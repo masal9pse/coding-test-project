@@ -136,6 +136,7 @@ export default {
       );
       console.log(reactiveObject.datasets);
       reactiveObject.datasets.splice(checkedIndex, 1);
+      return reactiveObject;
     },
     getRandomColor() {
       var letters = "0123456789ABCDEF";
