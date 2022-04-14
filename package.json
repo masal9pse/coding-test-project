@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve  --mode dev_and_pro",
+    "serve": "vue-cli-service serve  --mode dev",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint --mode dev_and_pro"
+    "lint": "vue-cli-service lint --mode dev"
   },
   "dependencies": {
     "axios": "^0.26.1",
