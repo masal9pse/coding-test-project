@@ -1,9 +1,9 @@
 import axios from "axios";
 
-function getFuturePrefsResponse() {
-  this.url = process.env.VUE_APP_RESAS_BASE_URL + "/api/v1/prefectures";
+function getBaseFutureResponse(parameter) {
+  let url = process.env.VUE_APP_RESAS_BASE_URL + parameter;
 
-  let futureResponse = axios.get(this.url, {
+  let futureResponse = axios.get(url, {
     headers: {
       "X-API-KEY": process.env.VUE_APP_RESAS_API_KEY,
     },
@@ -12,18 +12,16 @@ function getFuturePrefsResponse() {
   return futureResponse;
 }
 
-function getFuturePopulationResponse(prefNumber) {
-  this.url =
-    process.env.VUE_APP_RESAS_BASE_URL +
-    "/api/v1/population/composition/perYear?cityCode=-&prefCode=" +
-    prefNumber;
+function getFuturePrefsResponse() {
+  let parameter = "/api/v1/prefectures";
+  let futureResponse = getBaseFutureResponse(parameter);
+  return futureResponse;
+}
 
-  let futureResponse = axios.get(this.url, {
-    headers: {
-      "X-API-KEY": process.env.VUE_APP_RESAS_API_KEY,
-    },
-    data: {},
-  });
+function getFuturePopulationResponse(prefNumber) {
+  let parameter =
+    "/api/v1/population/composition/perYear?cityCode=-&prefCode=" + prefNumber;
+  let futureResponse = getBaseFutureResponse(parameter);
   return futureResponse;
 }
 
