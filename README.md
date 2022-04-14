@@ -1,14 +1,12 @@
 ## ディレクトリ構成
-1. consts
- - 都道府県の情報など値に変更がない固定値を定義します。
 
-2. models
+1. models
 - ビジネスロジックを記述しています。
 
-3. components
+2. components
 - ページの部品とその部品で使われる状態を管理しています。
 
-4. services
+3. services
 - API通信の処理を記述します。
 
 ディレクトリ構成に関してはこちらの記事( https://pentagon.tokyo/app/2937/#toc_id_2_1 )を参考にしました。

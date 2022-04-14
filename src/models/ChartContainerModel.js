@@ -4,7 +4,7 @@ function getReactiveObjectForInsert(response, datacollection, pref) {
   reactiveObject = datacollection;
   console.log(reactiveObject);
   reactiveObject.datasets.push({
-    label: pref.name,
+    label: pref.prefName,
     borderColor: this.getRandomColor(),
     fill: false,
     data: response.data.result.data[0].data.map((x) => x.value),

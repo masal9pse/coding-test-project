@@ -7,9 +7,9 @@
           <input
             type="checkbox"
             v-on:change="onChange(pref, $event)"
-            :value="pref.name"
+            :value="pref.prefName"
           />
-          <span v-text="pref.name"></span>
+          <span v-text="pref.prefName"></span>
         </label>
       </div>
       <line-chart :chart-data="datacollection" :option="options"></line-chart>
@@ -20,7 +20,6 @@
 <script>
 import LineChart from "./LineChart";
 import Vue from "vue";
-import PrefList from "../consts/PrefList";
 import ChartContainerModel from "../models/ChartContainerModel";
 import ResasApiService from "../services/ResasApiService";
 
@@ -30,7 +29,7 @@ export default {
   },
   data() {
     return {
-      prefList: PrefList.prefList,
+      prefList: [],
       datacollection: {
         labels: [
           1960, 1965, 1970, 1975, 1980, 1985, 1990, 2000, 2005, 2010, 2015,
@@ -40,23 +39,33 @@ export default {
       options: {},
     };
   },
+  mounted() {
+    this.getPrefsResponse();
+  },
   methods: {
+    getPrefsResponse() {
+      ResasApiService.getFuturePrefsResponse().then((response) => {
+        this.prefList = response.data.result;
+      });
+    },
     onChange(pref, event) {
       if (event.target.checked) {
-        ResasApiService.getFutureResponse(pref.number).then((response) => {
-          let reactiveObject = ChartContainerModel.getReactiveObjectForInsert(
-            response,
-            this.datacollection,
-            pref
-          );
-          Vue.set(this.datacollection, pref.number, reactiveObject);
-        });
+        ResasApiService.getFuturePopulationResponse(pref.prefCode).then(
+          (response) => {
+            let reactiveObject = ChartContainerModel.getReactiveObjectForInsert(
+              response,
+              this.datacollection,
+              pref
+            );
+            Vue.set(this.datacollection, pref.prefCode, reactiveObject);
+          }
+        );
       } else {
         let reactiveObject = ChartContainerModel.getReactiveObjectForDelete(
           event,
           this.datacollection
         );
-        Vue.delete(this.datacollection, pref.number, reactiveObject);
+        Vue.delete(this.datacollection, pref.prefCode, reactiveObject);
       }
     },
   },
